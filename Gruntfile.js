@@ -5,7 +5,7 @@ module.exports=function(grunt){
         //默认文件目录在这里
         paths:{
             minZip:'./minZip',//输出的最终文件minZip里面
-            less:'./css/less',//推荐使用Sass
+            less:'./css/less',//推荐使用Less
             css:'./css', //若简单项目，可直接使用原生CSS，同样可以grunt watch:base进行监控
             js:'./js', //js文件相关目录
             images:'./images' //图片相关
@@ -24,7 +24,7 @@ module.exports=function(grunt){
             },
             dist: {
                  files: {
-                     '<%= paths.minZip %>/js/min.v.js': '<%= paths.js %>/*.js'
+                     '<%= paths.minZip %>/js/min.base.js': '<%= paths.js %>/*.js'
                  }
             }
         },
@@ -53,12 +53,23 @@ module.exports=function(grunt){
                 },
                  files: [
                   
-                  {expand: true, cwd: '', src: ['**'], dest: 'public/'}, // makes all src relative to cwd
+                  {expand: true, cwd: 'build/', src: ['**'], dest: 'public/'}, // makes all src relative to cwd，只在build下压缩
                   
                 ]
             }
         },
 
+        //压缩前把用到的文件CP到指定文件夹下
+        copy:{
+            main:{
+                files:[
+                    {expand: true, src: ['minZip/css/**'], dest: 'build/css/', flatten: true, filter:'isFile'},// flatten: true, filter:'isFile'只对文件copy
+                    {expand: true, src: ['images/**'], dest: 'build/'},
+                    {expand: true, src: ['minZip/js/**'], dest: 'build/js/', flatten: true, filter:'isFile'},
+                    {expand: true, src: ['*', '!minZip/**', '!build/**', '!.gitignore', '!.DS_Store','!Gruntfile.js','!package.json','!node_modules/**','!go.sh','!.ftppass','!<%= archive_name %>*.zip'], dest: 'build/'}, //!minZip/**，类似这种如果不加**，还会有一个空文件夹
+                ]
+            }
+        },
 
         //Less 预处理
         less: {
@@ -132,11 +143,13 @@ module.exports=function(grunt){
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
 
     grunt.registerTask('default', ['cssmin','uglify']);
+    grunt.registerTask('package', ['copy','compress']);
     grunt.registerTask('style', ['less:admin','cssmin']);//不能用less，The trick was that Grunt doesn't seem to like the repetition in names. 详情看stackoverflow的解释
     /*http://stackoverflow.com/questions/22285942/grunt-throw-recursive-process-nexttick-detected*/
     //执行 grunt bundle --最终输出的文件 < name-生成日期.zip > 文件

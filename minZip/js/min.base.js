@@ -1,2 +1,2 @@
-/*! StaticTemplate 2014-06-23 */
+/*! StaticTemplate 2014-07-02 */
 !function(){console.log("Hello World!")}(window,jQuery);
