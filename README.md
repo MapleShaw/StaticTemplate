@@ -102,3 +102,6 @@ grunt的插件很多，可以狂戳 ：[Grunt的中文官网](http://gruntjs.cn/
 可以单独使用`grunt watch:base`进行普通监听js目录下所有文件和css/style.css。
 
 使用`grunt watch:less`或者`grunt watch:css`分别监听.less和.css文件。
+
+###此模板目前作为己用
+效仿自：[《让前端工作更快、更智能:利用StaticPage自动化工作流》](http://luolei.org/2014/03/front-end-dev-with-grunt-staticpage-workflow/)
